@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1
--- Время создания: Май 26 2019 г., 11:12
+-- Время создания: Май 26 2019 г., 20:28
 -- Версия сервера: 10.1.38-MariaDB
 -- Версия PHP: 7.3.2
 
@@ -38,12 +38,14 @@ CREATE TABLE `accounts` (
 --
 
 INSERT INTO `accounts` (`id`, `client_id`) VALUES
-(1, 1),
 (2, 1),
 (3, 1),
 (4, 1),
 (5, 1),
-(7, 1);
+(7, 1),
+(9, 1),
+(1, 3),
+(8, 3);
 
 -- --------------------------------------------------------
 
@@ -119,7 +121,9 @@ INSERT INTO `operations` (`id`, `account_number`, `account_open_data`) VALUES
 (3301, 1, '2018-10-03'),
 (3302, 2, '2018-09-13'),
 (3303, 3, '2019-03-16'),
-(3304, 4, '2018-08-23');
+(3304, 4, '2018-08-23'),
+(3307, 7, '2018-12-06'),
+(3314, 5, '2019-05-09');
 
 --
 -- Индексы сохранённых таблиц
@@ -150,7 +154,7 @@ ALTER TABLE `clients`
 --
 ALTER TABLE `operations`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `Nomer_scheta` (`account_number`);
+  ADD KEY `account_number` (`account_number`) USING BTREE;
 
 --
 -- AUTO_INCREMENT для сохранённых таблиц
@@ -160,7 +164,7 @@ ALTER TABLE `operations`
 -- AUTO_INCREMENT для таблицы `accounts`
 --
 ALTER TABLE `accounts`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT для таблицы `cities`
@@ -172,13 +176,13 @@ ALTER TABLE `cities`
 -- AUTO_INCREMENT для таблицы `clients`
 --
 ALTER TABLE `clients`
-  MODIFY `id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT для таблицы `operations`
 --
 ALTER TABLE `operations`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3306;
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3315;
 
 --
 -- Ограничения внешнего ключа сохраненных таблиц
