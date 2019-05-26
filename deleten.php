@@ -17,7 +17,7 @@
 $error=null;
 if (strlen($id) == "0") $error = null;
 // Соединяемся сервером БД //
-$link=mysqli_connect("localhost", "root", "", 'library') or die (mysqli_error ());
+$link=mysqli_connect("localhost", "root", "", 'bank') or die (mysqli_error ());
 mysqli_set_charset($link, "utf8");
 // Выбираем БД //
 // создаем переменную с запросом на вставку данных в БД
@@ -25,15 +25,14 @@ mysqli_set_charset($link, "utf8");
 <form method="post">
     <fieldset>
         <label for="id">номер строки:</label><br>
-        <select name="id" value="<?=@$id;?>">
+        <select name="id">
             <?php
             // Создаем выпадающий список, заполненный данными из другой таблицы
-            $sql = "SELECT id FROM autors";
+            $sql = "SELECT id FROM accounts";
             $gr_id = $link->query($sql);
             while($row = mysqli_fetch_array($gr_id)){
                 ?>
-                <option value = "<?=@$row['id']?>" <?php if(@$id==@$row['id'])
-                {print "selected";}?> ><?=@$row['id']?> </option>
+                <option><?=@$row['id']?></option>
                 <?php
             }
             ?>
@@ -43,11 +42,11 @@ mysqli_set_charset($link, "utf8");
     <input id="submit" type="submit" value="Отправить данные"><br/>
 </form>
 <?php
-$insert_sql = "SELECT autorId from books where autorId = $id";
+$insert_sql = "SELECT account_number from operations where account_number = $id";
 echo $insert_sql;
 $res = $link->query($insert_sql);
 if (@mysqli_num_rows($res) == 0){
-$insert_sql = "DELETE FROM autors WHERE id = $id";
+$insert_sql = "DELETE FROM accounts WHERE id = $id";
 // выполняем запрос, если поле Фамилия было заполнено. Обнуляем
 //переменные
 if ($error==null && $link->query($insert_sql)) {$id=null; $messageOK="Запись успешно добавлена";}

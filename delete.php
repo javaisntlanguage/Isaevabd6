@@ -14,11 +14,11 @@
 $error=null;
 if (strlen($id) == "0") $error = null;
 // Соединяемся сервером БД //
-$link=mysqli_connect("localhost", "root", "", 'library') or die (mysqli_error ());
+$link=mysqli_connect("localhost", "root", "", 'bank') or die (mysqli_error ());
 mysqli_set_charset($link, "utf8");
 // Выбираем БД //
 // создаем переменную с запросом на вставку данных в БД
-$insert_sql = "DELETE FROM gettingBooks WHERE id = $id";
+$insert_sql = "DELETE FROM operations WHERE id = $id";
 // выполняем запрос, если поле Фамилия было заполнено. Обнуляем
 //переменные
 if ($error==null && $link->query($insert_sql)) {$id=null; $messageOK="Запись успешно удалена";}
@@ -41,12 +41,11 @@ else if ($error!=null) {
         <select name="id" value="<?=@$id;?>">
             <?php
             // Создаем выпадающий список, заполненный данными из другой таблицы
-            $sql = "SELECT id FROM gettingBooks";
+            $sql = "SELECT id FROM operations";
             $gr_id = $link->query($sql);
             while($row = mysqli_fetch_array($gr_id)){
                 ?>
-                <option value = "<?=@$row['id']?>" <?php if(@$id==@$row['id'])
-                {print "selected";}?> ><?=@$row['id']?> </option>
+                <option><?=@$row['id']?> </option>
                 <?php
             }
             ?>

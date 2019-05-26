@@ -1,67 +1,105 @@
 <?php
-$link=mysqli_connect("localhost", "root", "", 'library') or die (mysqli_error ());
+$link=mysqli_connect("localhost", "root", "", 'bank') or die (mysqli_error ());
 mysqli_set_charset($link, "utf8");
 ?>
 <form method="post">
 <fieldset>
-    <label for="bookId">книга:</label><br>
-    <select name="bookId" value="<?=@$bookId;?>">
+    <label>ФИО</label><br>
+    <select name="full_name">
         <?php
-        // Создаем выпадающий список, заполненный данными из другой таблицы
-        $sql = "SELECT bookName FROM books";
+        $sql = "SELECT DISTINCT full_name FROM clients";
         $gr_id = $link->query($sql);
         while($row = mysqli_fetch_array($gr_id)){
             ?>
-            <option value = "<?=@$row['bookName']?>" <?php if(@$bookId==@$row['bookName'])
-            {print "selected";}?> ><?=@$row['bookName']?> </option>
+            <option><?=@$row['full_name']?></option>
             <?php
         }
         ?>
     </select><br>
-
-    <label for="date">Дата выдачи:</label><br>
-
-    <input type="date" name="receiptDate" size="30" value="<?=@$receiptDate;?>"><br>
-
-    <label for="date">Дата сдачи:</label><br>
-
-    <input type="date" name="deliveryDate" size="30" value="<?=@$deliveryDate;?>"><br>
-
-    <label for="readerId">читатель:</label><br>
-    <select name="readerId" value="<?=@$readerId;?>">
+    <label>Серия паспорта</label><br>
+    <select name="passport_series">
         <?php
-        // Создаем выпадающий список, заполненный данными из другой таблицы
-        $sql = "SELECT readerName FROM readers";
+        $sql = "SELECT DISTINCT passport_series FROM clients";
         $gr_id = $link->query($sql);
         while($row = mysqli_fetch_array($gr_id)){
             ?>
-            <option value = "<?=@$row['readerName']?>" <?php if(@$readerId==@$row['readerName'])
-            {print "selected";}?> ><?=@$row['readerName']?> </option>
+            <option><?=@$row['passport_series']?></option>
             <?php
         }
         ?>
-    </select>
+    </select><br>
+    <label>Номер паспорта</label><br>
+    <select name="passport_number">
+        <?php
+        $sql = "SELECT DISTINCT passport_number FROM clients";
+        $gr_id = $link->query($sql);
+        while($row = mysqli_fetch_array($gr_id)){
+            ?>
+            <option><?=@$row['passport_number']?></option>
+            <?php
+        }
+        ?>
+    </select><br>
+    <label>адрес</label><br>
+    <select name="address">
+        <?php
+        $sql = "SELECT DISTINCT address FROM clients";
+        $gr_id = $link->query($sql);
+        while($row = mysqli_fetch_array($gr_id)){
+            ?>
+            <option><?=@$row['address']?></option>
+            <?php
+        }
+        ?>
+    </select><br>
+    <label>город</label><br>
+    <select name="city_id">
+        <?php
+        $sql = "SELECT DISTINCT city_name FROM cities";
+        $gr_id = $link->query($sql);
+        while($row = mysqli_fetch_array($gr_id)){
+            ?>
+            <option><?=@$row['city_name']?></option>
+            <?php
+        }
+        ?>
+    </select><br>
+    <label>пол</label><br>
+    <select name="gender">
+        <?php
+        $sql = "SELECT DISTINCT gender FROM clients";
+        $gr_id = $link->query($sql);
+        while($row = mysqli_fetch_array($gr_id)){
+            ?>
+            <option><?=@$row['gender']?></option>
+            <?php
+        }
+        ?>
+    </select><br>
 </fieldset>
     <input id="submit" type="submit" value="Вывод запроса"><br/>
 </form>
 <?php
-@$bookId = $_POST["bookId"];
-@$receiptDate = $_POST["receiptDate"];
-@$deliveryDate = trim($_POST["deliveryDate"]);
-@$readerId = trim($_POST["readerId"]);
+@$full_name = trim($_POST["full_name"]);
+@$passport_series = trim($_POST["passport_series"]);
+@$passport_number = trim($_POST["passport_number"]);
+@$address = trim($_POST["address"]);
+@$city_id = trim($_POST["city_id"]);
+@$gender = trim($_POST["gender"]);
 
-$SQL_query = "SELECT * FROM gettingBooks WHERE bookId IN (SELECT id from books where bookName = '$bookId') AND receiptDate >= '$receiptDate' AND deliveryDate >= '$deliveryDate' AND readerId IN (SELECT id from readers where readerName = '$readerId')";
+$SQL_query = "SELECT * FROM clients WHERE full_name  = '$full_name' AND passport_series = $passport_series AND passport_number = $passport_number AND address = '$address'".
+ "AND city_id IN(SELECT id FROM cities WHERE city_name = '$city_id') AND gender = '$gender'";
 $res = $link->query($SQL_query);
-if(@$bookId = $_POST["bookId"] != null && @$receiptDate = $_POST["receiptDate"] != null && @$deliveryDate = trim($_POST["deliveryDate"]) != null && @$readerId = trim($_POST["readerId"]) != null)
+if(@$full_name != null && @$passport_series != null && @$passport_number != null && @$address != null && @$city_id != null && @$gender != null)
 {
     echo $SQL_query."<br>";
     if(mysqli_num_rows($res) > 0)
     {
-        echo "<table border=1> <caption>Таблица gettingBooks</caption> <tr> <th>bookId</th> <th>receiptDate</th> <th>deliveryDate</th> <th>readerId</th> </tr>";
+        echo "<table border=1> <caption>Таблица clients</caption> <tr> <th>full_name</th> <th>passport_series</th> <th>passport_number</th> <th>address</th> <th>city_id</th> <th>gender</th> </tr>";
         while ($row = mysqli_fetch_array($res))
         {
-            echo "<tr> <td>" . $row['bookId'] . "</td> <td>" . $row['receiptDate'] . "</td> <td>"
-                . $row['deliveryDate'] . "</td> <td>" . $row['readerId'] . "</td> </tr>";
+            echo "<tr> <td>" . $row['full_name'] . "</td> <td>" . $row['passport_series'] . "</td> <td>" . $row['passport_number'] . "</td> <td>"
+                . $row['address'] . "</td> <td>" . $row['city_id'] . "</td> <td>" . $row['gender'] . "</td> </tr>";
         }
     }
     else

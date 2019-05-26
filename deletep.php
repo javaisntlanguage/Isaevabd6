@@ -10,30 +10,27 @@
 //данные в БД//
 // получаем данные из формы, если они уже были внесены//
 @$name = trim($_POST['name']);
-
-
 // проверяем, начали ли мы заполнять форму. Если начали, но не заполнили
 //поле с фамилией, то записываем в переменную $error сообщение об ошибке//
 $error=null;
 if (strlen($name) == "0") $error = null;
 // Соединяемся сервером БД //
-$link=mysqli_connect("localhost", "root", "", 'library') or die (mysqli_error ());
+$link=mysqli_connect("localhost", "root", "", 'bank') or die (mysqli_error ());
 mysqli_set_charset($link, "utf8");
 // Выбираем БД //
 // создаем переменную с запросом на вставку данных в БД
 ?>
 <form method="post">
     <fieldset>
-        <label>имя читателя:</label><br>
-        <select name="name" value="<?=@$name;?>">
+        <label>имя клиента:</label><br>
+        <select name="name">
             <?php
             // Создаем выпадающий список, заполненный данными из другой таблицы
-            $sql = "SELECT DISTINCT readerName FROM readers";
+            $sql = "SELECT DISTINCT full_name FROM clients";
             $gr_id = $link->query($sql);
             while($row = mysqli_fetch_array($gr_id)){
                 ?>
-                <option value = "<?=@$row['readerName']?>" <?php if(@$id==@$row['readerName'])
-                {print "selected";}?> ><?=@$row['readerName']?> </option>
+                <option><?=@$row['full_name']?></option>
                 <?php
             }
             ?>
@@ -43,12 +40,13 @@ mysqli_set_charset($link, "utf8");
     <input id="submit" type="submit" value="Отправить данные"><br/>
 </form>
 <?php
-$insert_sql = "SELECT readerId from gettingBooks where readerId IN (SELECT id FROM readers WHERE readerName = '$name')";
+$insert_sql = "SELECT client_id from accounts where client_id IN (SELECT id FROM clients WHERE full_name = '$name')";
 echo $insert_sql."<br>";
 
 $res = $link->query($insert_sql);
 if (@mysqli_num_rows($res) == 0){
-    $insert_sql = "DELETE FROM readers WHERE readerName = $name";
+    $insert_sql = "DELETE FROM clients WHERE full_name = '$name'";
+    echo "<br>".$insert_sql."<br>";
 // выполняем запрос, если поле Фамилия было заполнено. Обнуляем
 //переменные
     if ($error==null && $link->query($insert_sql)) {$id=null; $messageOK="Запись успешно добавлена";}
