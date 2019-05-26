@@ -1,104 +1,90 @@
 <html>
 <head>
-    <title>обновление таблицы gettingBooks</title>
+    <title>Внесение данных в таблицу clients</title>
 </head>
 <body>
 <?php
 // это основной скрипт, который проверят заполненность полей и добавляет
 //данные в БД//
 // получаем данные из формы, если они уже были внесены//
-@$bookId = $_POST["bookId"];
-@$receiptDate = $_POST["receiptDate"];
-@$deliveryDate = trim($_POST["deliveryDate"]);
-@$readerId = trim($_POST["readerId"]);
-@$id = trim($_POST['id']);
+@$id = trim($_POST["id"]);
+@$city_id = trim($_POST["city_id"]);
+@$full_name = trim($_POST["full_name"]);
+@$passport_series = trim($_POST["passport_series"]);
+@$passport_number = trim($_POST["passport_number"]);
+@$address = trim($_POST["address"]);
+@$gender = trim($_POST['gender']);
 
 // проверяем, начали ли мы заполнять форму. Если начали, но не заполнили
 //поле с фамилией, то записываем в переменную $error сообщение об ошибке//
 $error=null;
-if (strlen($deliveryDate) == "0" && strlen($readerId) == "0" && strlen($receiptDate) == "0" &&
-    strlen($bookId) == "0") $error = null;
+if (strlen($city_id) == "0" && strlen($full_name) == "0" && strlen($passport_series) == "0" &&
+    strlen($address) == "0" && strlen($gender) == "0"&& strlen($id) == "0") $error = null;
 // Соединяемся сервером БД //
-$link=mysqli_connect("localhost", "root", "", 'library') or die (mysqli_error ());
+$link=mysqli_connect("localhost", "root", "", 'bank') or die (mysqli_error ());
 mysqli_set_charset($link, "utf8");
 // Выбираем БД //
 // создаем переменную с запросом на вставку данных в БД
-$insert_sql = "UPDATE gettingBooks SET bookId = (SELECT id FROM books WHERE bookName ='$bookId'), receiptDate = '$receiptDate', deliveryDate = '$deliveryDate', readerId = (SELECT id FROM readers WHERE readerName ='$readerId')".
-" WHERE id = $id";
+$insert_sql = "UPDATE clients  SET full_name = '$full_name', passport_series= $passport_series, passport_number= $passport_number, address = '$address', city_id= $city_id, gender= '$gender' WHERE id = $id";
 // выполняем запрос, если поле Фамилия было заполнено. Обнуляем
 //переменные
-if ($error==null && $link->query($insert_sql)) {$deliveryDate=null; $readerId=null;
-    $receiptDate=null; $bookId=null; $messageOK="Запись успешно добавлена";}
+if ($error==null && $link->query($insert_sql)) {$city_id=null; $full_name=null;
+    $passport_series=null; $address=null; $gender=null; $messageOK="Запись успешно добавлена";}
 else if ($error!=null) {
     $messageERR = "Произошла ошибка при добавлении новой записи";
     echo mysqli_error($link);
 }
 ?>
-<! теперь создаем форму для ввода данных. В форме используются php-вставки,
-чтобы задавать начальные значения полей.
-Это необходимо в том случае, если мы нажмем на кнопку и будет выведено
-сообщение об ошибке. Если не сохранять уже введенные значения и не выводить их
-в качестве начальных, то введенные данные будут потеряны.
-Здесь же можно увидеть вывод переменной $error - если она пуста, то мы ничего не
-увидим на странице, если же в нее было записано сообщение об ошибке, то оно
-будет выведено.>
 <form method="post">
     <fieldset>
-        <label for="id">номер строки:</label><br>
-        <select name="id" value="<?=@$id;?>">
+        <label>номер строки:</label><br>
+        <select name="id">
             <?php
             // Создаем выпадающий список, заполненный данными из другой таблицы
-            $sql = "SELECT id FROM gettingBooks";
+            $sql = "SELECT id FROM clients";
             $gr_id = $link->query($sql);
             while($row = mysqli_fetch_array($gr_id)){
                 ?>
-                <option value = "<?=@$row['id']?>" <?php if(@$id==@$row['id'])
+                <option><?=@$row['id']?> </option>
+                <?php
+            }
+            ?>
+        </select><br>
+        <label for="medication_id">id города:</label><br>
+        <select name="city_id" value="<?=@$city_id;?>">
+            <?php
+            // Создаем выпадающий список, заполненный данными из другой таблицы
+            $sql = "SELECT id FROM cities";
+            $gr_id = $link->query($sql);
+            while($row = mysqli_fetch_array($gr_id)){
+                ?>
+                <option value = "<?=@$row['id']?>" <?php if(@$city_id==@$row['id'])
                 {print "selected";}?> ><?=@$row['id']?> </option>
                 <?php
             }
             ?>
         </select>
         <br>
+        <label>ФИО:</label><br>
+        <input type="text" name="full_name" size="30" value="<?=@$full_name;?>"><br>
 
-        <label for="bookId">книга:</label><br>
-        <select name="bookId" value="<?=@$bookId;?>">
-            <?php
-            // Создаем выпадающий список, заполненный данными из другой таблицы
-            $sql = "SELECT bookName FROM books";
-            $gr_id = $link->query($sql);
-            while($row = mysqli_fetch_array($gr_id)){
-                ?>
-                <option value = "<?=@$row['bookName']?>" <?php if(@$bookId==@$row['bookName'])
-                {print "selected";}?> ><?=@$row['bookName']?> </option>
-                <?php
-            }
-            ?>
-        </select><br>
+        <label>серия паспорта:</label><br>
+        <input type="text" name="passport_series" size="30" value="<?=@$passport_series;?>"><br>
 
-        <label for="date">Дата выдачи:</label><br>
+        <label>номер паспорта:</label><br>
+        <input type="text" name="passport_number" size="30" value="<?=@$passport_number;?>"><br>
 
-        <input type="date" name="receiptDate" size="30" value="<?=@$receiptDate;?>"><br>
+        <label>адрес:</label><br>
+        <input type="text" name="address" size="30" value="<?=@$address;?>"><br>
 
-        <label for="date">Дата сдачи:</label><br>
-
-        <input type="date" name="deliveryDate" size="30" value="<?=@$deliveryDate;?>"><br>
-
-        <label for="readerId">читатель:</label><br>
-        <select name="readerId" value="<?=@$readerId;?>">
-            <?php
-            // Создаем выпадающий список, заполненный данными из другой таблицы
-            $sql = "SELECT readerName FROM readers";
-            $gr_id = $link->query($sql);
-            while($row = mysqli_fetch_array($gr_id)){
-                ?>
-                <option value = "<?=@$row['readerName']?>" <?php if(@$readerId==@$row['readerName'])
-                {print "selected";}?> ><?=@$row['readerName']?> </option>
-                <?php
-            }
-            ?>
+        <label>пол:</label><br>
+        <select name="gender">
+            <option>G</option>
+            <option>M</option>
         </select>
     </fieldset>
-    <input id="submit" type="submit" value="Обновить"><br/>
+    <br/>
+    <input id="submit" type="submit" value="Отправить данные"><br/>
 </form>
 <?php echo $insert_sql; ?>
 <! Внизу страницы выводим сообщение о результате внесения данных >
