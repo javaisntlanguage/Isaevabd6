@@ -9,7 +9,7 @@
     <title>База данных bank</title>
 </head>
 <body bgcolor="#C2E0E4" leftmargin="10%" rightmargin="10%">
-<h1>База данных library</h1>
+<h1>База данных bank</h1>
 <IMG src="bank.jpg"
      align="right" width="25%">
 <FONT SIZE="+1">
@@ -18,16 +18,35 @@
 
 
     <form class="a" action="insert.php">
-        <input type="submit" value="создать">
+        <input type="submit" value="создать clients">
 
     </form>
 
     <form class="a" action="5laba.php">
-        <input type="submit" value="прочитать">
+        <input type="submit" value="прочитать clients">
     </form>
 
     <form class="a" action="update.php">
-        <input type="submit" value="обновить">
+        <input type="submit" value="обновить clients">
+
+    </form>
+
+    <form class="a" action="deletep.php">
+        <input type="submit" value="удалить clients">
+
+    </form>
+
+    <form class="a" action="create_operations.php">
+        <input type="submit" value="создать operations">
+
+    </form>
+
+    <form class="a" action="select_operations.php">
+        <input type="submit" value="прочитать operations">
+    </form>
+
+    <form class="a" action="update_operations.php">
+        <input type="submit" value="обновить operations">
 
     </form>
 
@@ -36,14 +55,24 @@
 
     </form>
 
+    <form class="a" action="create_accounts.php">
+        <input type="submit" value="создать accounts">
+
+    </form>
+
+    <form class="a" action="select_accounts.php">
+        <input type="submit" value="прочитать accounts">
+    </form>
+
+    <form class="a" action="update_accounts.php">
+        <input type="submit" value="обновить accounts">
+
+    </form>
+
     <form class="a" action="deleten.php">
         <input type="submit" value="удалить accounts">
 
     </form>
 
-    <form class="a" action="deletep.php">
-        <input type="submit" value="удалить clients">
-
-    </form>
 </body>
 </html>
